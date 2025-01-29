@@ -1,0 +1,18 @@
+First create a virtual environment:
+------------------------------------
+python -m venv task_env
+
+
+Activate the window (using bash):
+---------------------
+source task_env/Scripts/activate
+
+
+Install Django:
+---------------
+pip install Django
+
+
+Create a Django project:
+---------------------------
+django-admin startproject task_management .
