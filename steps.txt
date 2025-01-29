@@ -16,3 +16,7 @@ pip install Django
 Create a Django project:
 ---------------------------
 django-admin startproject task_management .
+
+to run project:
+-----------------
+python manage.py runserver
