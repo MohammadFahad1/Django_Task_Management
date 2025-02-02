@@ -9,7 +9,7 @@ def user_dashboard(request):
 
 def test(request):
     context = {
-        "name": ["Mahmud", "Ahmed", "John"],
+        "names": ["Mahmud", "Ahmed", "John", "Shajib", "Rajib"],
         "Fahad": {"name": "Md. Fahad Monshi", "eye": "blue"}
     }
     return render(request, "test.html", context)

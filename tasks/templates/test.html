@@ -8,10 +8,15 @@
     <link rel="stylesheet" href="{% static "css/style.css" %}">
 </head>
 <body>
-    {{name}}
+    {% comment %} {{name}} {% endcomment %}
     {{Fahad.name}}
     <h1 class="lal-bg">Lal Background</h1>
     <h1 class="green-bg">Green Background</h1>
+    <ul>
+    {% for name in names %}
+        {% if not name == "John" %}<li class="text-green-500">{{name}}</li>{% endif %}
+    {% endfor %}
+    </ul>
     <img src="{% static "images/my_portfolio_logo.jpg" %}" alt="">
 </body>
 </html>
