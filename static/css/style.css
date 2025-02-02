@@ -1,0 +1,10 @@
+.lal-bg {
+  background-color: red;
+  color: white;
+}
+
+.green-bg {
+  background-color: lightblue;
+  color: white;
+  padding: 5px;
+}
