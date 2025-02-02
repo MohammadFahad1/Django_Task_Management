@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>{% block title %}{% endblock title %}</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,9 +49,9 @@
         </div>
       </header>
       <main>
-        <!-- Starts Grid -->
+        {% comment %} <!-- Starts Grid --> {% endcomment %}
         <section class="grid grid-cols-4 gap-6 mb-8">
-          <!-- Total Tasks -->
+          {% comment %} <!-- Total Tasks --> {% endcomment %}
           <div class="max-w-[400px] bg-white p-6 rounded-xl shadow-sm">
             <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">
               Total Tasks
@@ -79,7 +79,7 @@
               </div>
             </div>
           </div>
-          <!-- Completed Tasks -->
+          {% comment %} <!-- Completed Tasks --> {% endcomment %}
           <div class="max-w-[400px] bg-white p-6 rounded-xl shadow-sm">
             <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">
               Completed Tasks
@@ -107,7 +107,7 @@
               </div>
             </div>
           </div>
-          <!-- Tasks In Progress -->
+          {% comment %} <!-- Tasks In Progress --> {% endcomment %}
           <div class="max-w-[400px] bg-white p-6 rounded-xl shadow-sm">
             <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">
               Tasks In Progress
@@ -135,7 +135,7 @@
               </div>
             </div>
           </div>
-          <!-- ToDos -->
+          {% comment %} <!-- ToDos --> {% endcomment %}
           <div class="max-w-[400px] bg-white p-6 rounded-xl shadow-sm">
             <h3 class="text-sm font-bold text-gray-500 uppercase mb-4">
               Todos
@@ -164,145 +164,9 @@
             </div>
           </div>
         </section>
-
-        <section class="grid grid-cols-2 gap-6">
-          <!-- Today's Tasks -->
-          <div>
-            <h3>Today's Tasks</h3>
-          </div>
-
-          <!-- All Tasks -->
-          <div
-            class="bg-white rounded-xl shadow-sm border-b border-gray-100 text-sm text-gray-500"
-          >
-            <h3>All Tasks</h3>
-            <div class="grid grid-cols-4 p-4 border-b border-gray-100">
-              <div>TASK TITLE</div>
-              <div>PRIORITY</div>
-              <div>TEAM</div>
-              <div>CREATED AT</div>
-            </div>
-            <!-- Item-1 Starts -->
-            <div class="grid grid-cols-4 items-center p-4">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div><span>Test Low Task</span></div>
-              </div>
-              <div>
-                <span
-                  class="px-3 py-1 bg-blue-50 rounded-full text-blue-600 text-sm"
-                  >Low</span
-                >
-              </div>
-              <div>
-                <div class="flex -space-x-2">
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span class="text-gray-500 text-sm">9 months ago</span>
-              </div>
-            </div>
-            <!-- Item-1 Ends -->
-            <!-- Item-2 Starts -->
-            <div class="grid grid-cols-4 items-center p-4">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <div><span>Test Task</span></div>
-              </div>
-              <div>
-                <span
-                  class="px-3 py-1 bg-gray-100 rounded-full text-gray-600 text-sm"
-                  >Normal</span
-                >
-              </div>
-              <div>
-                <div class="flex -space-x-2">
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span class="text-gray-500 text-sm">9 months ago</span>
-              </div>
-            </div>
-            <!-- Item-2 Ends -->
-            <!-- Item-3 Starts -->
-            <div class="grid grid-cols-4 items-center p-4">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                <div><span>Test Task</span></div>
-              </div>
-              <div>
-                <span
-                  class="px-3 py-1 bg-red-50 rounded-full text-red-600 text-sm"
-                  >High</span
-                >
-              </div>
-              <div>
-                <div class="flex -space-x-2">
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white"
-                  >
-                    CA
-                  </div>
-                </div>
-              </div>
-              <div>
-                <span class="text-gray-500 text-sm">10 months ago</span>
-              </div>
-            </div>
-            <!-- Item-3 Ends -->
-          </div>
-        </section>
+        {% block tasks %}{% endblock tasks %}
       </main>
+      {% include "footer.html" %}
     </div>
   </body>
 </html>
