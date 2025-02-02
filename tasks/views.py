@@ -8,4 +8,8 @@ def user_dashboard(request):
     return render(request, "dashboard/user-dashboard.html")
 
 def test(request):
-    return render(request, "test.html")
+    context = {
+        "name": ["Mahmud", "Ahmed", "John"],
+        "Fahad": {"name": "Md. Fahad Monshi", "eye": "blue"}
+    }
+    return render(request, "test.html", context)
