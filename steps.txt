@@ -20,3 +20,11 @@ django-admin startproject task_management .
 to run project:
 -----------------
 python manage.py runserver
+
+to run initial migration of django
+----------------------------------
+python manage.py migrate
+
+to make migration after creating any model
+------------------------------------------
+python manage.py makemigrations
