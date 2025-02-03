@@ -28,3 +28,4 @@ python manage.py migrate
 to make migration after creating any model
 ------------------------------------------
 python manage.py makemigrations
+python manage.py migrate
