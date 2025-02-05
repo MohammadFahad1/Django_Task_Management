@@ -6,8 +6,8 @@ class Employee(models.Model):
 
 # Create your models here.
 class Tasks(models.Model):
-    project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1)
-    assigned_to = models.ManyToManyField(Employee)
+    project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1, related_name="tasks")
+    assigned_to = models.ManyToManyField(Employee, related_name="tasks")
     title = models.CharField(max_length=250, default="")
     description = models.TextField()
     due_date = models.DateField()
@@ -24,7 +24,7 @@ class TaskDetail(models.Model):
         (MEDIUM, "MEDIUM"),
         (LOW, "LOW")
     )
-    task = models.OneToOneField(Tasks, on_delete=models.CASCADE)
+    task = models.OneToOneField(Tasks, on_delete=models.CASCADE, related_name="task_detail")
     assigned_to = models.CharField(max_length=100)
     priority = models.CharField(max_length=1, choices=PRIORITY_OPTIONS, default=LOW)
 
