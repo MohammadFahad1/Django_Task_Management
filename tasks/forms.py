@@ -45,6 +45,7 @@ class TaskModelForm(StyledFormMixin, forms.ModelForm):
         model = Tasks
         fields = ['title', 'description', 'due_date', 'assigned_to']
         # exclude = ['project', 'is_completed', 'created_at', 'updated_at']
+        # Change the widgets
         widgets = {
             "due_date": forms.SelectDateWidget,
             "assigned_to": forms.CheckboxSelectMultiple
