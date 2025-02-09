@@ -32,7 +32,7 @@ class StyledFormMixin:
                 })
             elif isinstance(field.widget, forms.SelectDateWidget):
                 field.widget.attrs.update({
-                    'class': self.default_classes
+                    'class': 'border-2 border-gray-500 p-2 mb-2 rounded-lg shadow-sm focus:border-rose-400'
                 })
             elif isinstance(field.widget, forms.CheckboxSelectMultiple):
                 field.widget.attrs.update({
@@ -45,6 +45,10 @@ class TaskModelForm(StyledFormMixin, forms.ModelForm):
         model = Tasks
         fields = ['title', 'description', 'due_date', 'assigned_to']
         # exclude = ['project', 'is_completed', 'created_at', 'updated_at']
+        widgets = {
+            "due_date": forms.SelectDateWidget,
+            "assigned_to": forms.CheckboxSelectMultiple
+        }
 
         """ Manual Widget """
         # widgets = {
