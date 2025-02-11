@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from tasks.forms import TaskForm, TaskModelForm
-from tasks.models import Employee, Tasks
+from tasks.models import Employee, Tasks, TaskDetail
 from django.http import HttpResponse
+from datetime import date
 # Create your views here.
 
 def manager_dashboard(request):
@@ -47,6 +48,20 @@ def create_task(request):
     return render(request, "task_form.html", context)
 
 def view_task(request):
+    """ 
+    # Show completed tasks
+    task = Tasks.objects.filter(status="COMPLETED")
+    """
+    """ 
+    # Show Todays Tasks
+    tasks = Tasks.objects.filter(due_date=date.today())
+    """
+
+    # Show tasks with low priority
+    tasks = TaskDetail.objects.exclude(priority="H")
+    return render(request, "show_task.html", {"tasks": tasks})
+
+    """ 
     # Retrieve all data from tasks model
     tasks = Tasks.objects.all()
     # task3 = Tasks.objects.get(id=3)
@@ -55,3 +70,5 @@ def view_task(request):
     # Fetch the first task
     task3 = Tasks.objects.first()
     return render(request, "show_task.html", {"tasks": tasks, "task3": task3})
+    
+    """
