@@ -29,3 +29,14 @@ to make migration after creating any model
 ------------------------------------------
 python manage.py makemigrations
 python manage.py migrate
+
+Create requirements.txt file
+-----------------------------------
+pip freeze > requirements.txt
+
+
+To create venv using requirements.txt
+--------------------------------------
+python -m venv env_name
+-> activate the environment
+pip install -r requirements.txt
