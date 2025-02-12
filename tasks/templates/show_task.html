@@ -8,9 +8,15 @@
 <body>
     <div>
         <ul>
-            {% for task in tasks %}
+            {% for project in tasks %}
                 {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> {% endcomment %}
-                <li>{{task.title}} - ({{task.project.name}})</li>
+                <li>{{project.name}}
+                    <ol>
+                        {% for task in project.tasks.all %}
+                            <li>{{task.title}}</li>
+                        {% endfor %}
+                    </ol>
+                </li>
             {% endfor %}
         </ul>
     </div>

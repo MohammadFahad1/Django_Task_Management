@@ -87,4 +87,5 @@ def view_task(request):
     # tasks = Tasks.objects.select_related('project').all()
     
     """ prefetch_related (reverce foreignkey, many to many) """
+    tasks = Project.objects.prefetch_related("tasks").all()
     return render(request, "show_task.html", {"tasks": tasks})
