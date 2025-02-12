@@ -8,11 +8,11 @@
 <body>
     <div>
         <ul>
-            {% for project in tasks %}
+            {% for emp in tasks %}
                 {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> {% endcomment %}
-                <li>{{project.name}}
+                <li>{{emp.name}}
                     <ol>
-                        {% for task in project.tasks.all %}
+                        {% for task in emp.tasks.all %}
                             <li>{{task.title}}</li>
                         {% endfor %}
                     </ol>
