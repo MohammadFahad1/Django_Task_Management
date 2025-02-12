@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from tasks.forms import TaskForm, TaskModelForm
-from tasks.models import Employee, Tasks, TaskDetail
+from tasks.models import Employee, Tasks, TaskDetail, Project
+from django.db.models import Q
 from django.http import HttpResponse
 from datetime import date
 # Create your views here.
@@ -57,10 +58,18 @@ def view_task(request):
     tasks = Tasks.objects.filter(due_date=date.today())
     """
 
-    # Show tasks with low priority
+    """ # Show tasks with low priority
     tasks = TaskDetail.objects.exclude(priority="H")
-    return render(request, "show_task.html", {"tasks": tasks})
+    return render(request, "show_task.html", {"tasks": tasks}) """
 
+    """ # Show the task that contains word paper
+    tasks = Tasks.objects.filter(title__icontains = "we", status__icontains="completed") """
+
+    """ # Show the task which are pending or in progress
+    tasks = Tasks.objects.filter(Q(status="PENDING") | Q(status="IN_PROGRESS")) """
+    """ 
+    # To check if any result exists
+    tasks = Tasks.objects.filter(status="COMPLETED").exists() """
     """ 
     # Retrieve all data from tasks model
     tasks = Tasks.objects.all()
@@ -70,5 +79,12 @@ def view_task(request):
     # Fetch the first task
     task3 = Tasks.objects.first()
     return render(request, "show_task.html", {"tasks": tasks, "task3": task3})
-    
     """
+    
+    """ Select related (ForeignKey, OneToOneField) """
+    # tasks = Tasks.objects.select_related('task_detail').all()
+    # tasks = TaskDetail.objects.select_related('task').all()
+    # tasks = Tasks.objects.select_related('project').all()
+    
+    """ prefetch_related (reverce foreignkey, many to many) """
+    return render(request, "show_task.html", {"tasks": tasks})
