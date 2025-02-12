@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from tasks.forms import TaskForm, TaskModelForm
 from tasks.models import Employee, Tasks, TaskDetail, Project
-from django.db.models import Q
+from django.db.models import Q, Count, Avg, Max, Min
 from django.http import HttpResponse
 from datetime import date
 # Create your views here.
@@ -87,4 +87,11 @@ def view_task(request):
     # tasks = Tasks.objects.select_related('project').all()
     
     """ prefetch_related (reverce foreignkey, many to many) """
+    # tasks = Project.objects.prefetch_related("tasks").all()
+    # tasks = Tasks.objects.prefetch_related("assigned_to").all()
+    # tasks = Employee.objects.prefetch_related("tasks").all()
+
+    """ Aggregate """
+    # tasks = Tasks.objects.aggregate(num_task=Count('id'))
+    tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})

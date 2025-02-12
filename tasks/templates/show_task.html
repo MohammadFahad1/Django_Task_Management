@@ -7,12 +7,21 @@
 </head>
 <body>
     <div>
-        <ul>
-            {% for task in tasks %}
-                {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> {% endcomment %}
-                <li>{{task.title}} - ({{task.project.name}})</li>
+        {% comment %} <ul>
+            {% for emp in tasks %}
+                {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> 
+                <li>{{emp.name}}
+                    <ol>
+                        {% for task in emp.tasks.all %}
+                            <li>{{task.title}}</li>
+                        {% endfor %}
+                    </ol>
+                </li>
             {% endfor %}
-        </ul>
+        </ul> {% endcomment %}
+        {% for task in tasks %}
+            <p>{{task.name}} - {{task.num_task}}</p>
+        {% endfor %}
     </div>
 </body>
 </html>
