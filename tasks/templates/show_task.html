@@ -7,9 +7,9 @@
 </head>
 <body>
     <div>
-        <ul>
+        {% comment %} <ul>
             {% for emp in tasks %}
-                {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> {% endcomment %}
+                {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> 
                 <li>{{emp.name}}
                     <ol>
                         {% for task in emp.tasks.all %}
@@ -18,7 +18,10 @@
                     </ol>
                 </li>
             {% endfor %}
-        </ul>
+        </ul> {% endcomment %}
+        {% for task in tasks %}
+            <p>{{task.name}} - {{task.num_task}}</p>
+        {% endfor %}
     </div>
 </body>
 </html>
