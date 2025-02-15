@@ -4,22 +4,36 @@ from tasks.models import Employee, Tasks, TaskDetail, Project
 from django.db.models import Q, Count, Avg, Max, Min
 from django.http import HttpResponse
 from datetime import date
+
 # Create your views here.
 
 def manager_dashboard(request):
-    tasks = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to').all()
-
     # Getting Task Count
     # total_task = tasks.count()
     # completed_task = Tasks.objects.filter(status="COMPLETED").count()
     # in_progress_task = Tasks.objects.filter(status="IN_PROGRESS").count()
     # pending_task = Tasks.objects.filter(status="PENDING").count()
+    
+    type = request.GET.get('type', 'all')
+
     counts = Tasks.objects.aggregate(
         total=Count('id'),
         completed=Count('id', filter=Q(status="COMPLETED")),
         in_progress=Count('id', filter=Q(status="IN_PROGRESS")),
         pending=Count('id', filter=Q(status="PENDING")),
         )
+    
+    # Retriving task data
+    base_query = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to')
+
+    if type == 'completed':
+        tasks = base_query.filter(status='COMPLETED')
+    elif type == 'in-progress':
+        tasks = base_query.filter(status='IN_PROGRESS')
+    elif type == 'pending':
+        tasks = base_query.filter(status='PENDING')
+    elif type == 'all':
+        tasks = base_query.all()
 
     context = {
         "tasks": tasks,
