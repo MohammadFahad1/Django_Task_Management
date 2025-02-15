@@ -38,9 +38,9 @@ class TaskDetail(models.Model):
     MEDIUM = "M"
     LOW = "L"
     PRIORITY_OPTIONS = (
-        (HIGH, "HIGH"),
-        (MEDIUM, "MEDIUM"),
-        (LOW, "LOW")
+        (HIGH, "High"),
+        (MEDIUM, "Medium"),
+        (LOW, "Low")
     )
     task = models.OneToOneField(Tasks, on_delete=models.CASCADE, related_name="task_detail")
     assigned_to = models.CharField(max_length=100)
