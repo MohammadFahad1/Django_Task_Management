@@ -7,20 +7,23 @@ from datetime import date
 # Create your views here.
 
 def manager_dashboard(request):
-    tasks = Tasks.objects.all()
+    tasks = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to').all()
 
     # Getting Task Count
-    total_task = tasks.count()
-    completed_task = Tasks.objects.filter(status="COMPLETED").count()
-    in_progress_task = Tasks.objects.filter(status="IN_PROGRESS").count()
-    pending_task = Tasks.objects.filter(status="PENDING").count()
+    # total_task = tasks.count()
+    # completed_task = Tasks.objects.filter(status="COMPLETED").count()
+    # in_progress_task = Tasks.objects.filter(status="IN_PROGRESS").count()
+    # pending_task = Tasks.objects.filter(status="PENDING").count()
+    counts = Tasks.objects.aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(status="COMPLETED")),
+        in_progress=Count('id', filter=Q(status="IN_PROGRESS")),
+        pending=Count('id', filter=Q(status="PENDING")),
+        )
 
     context = {
         "tasks": tasks,
-        "total_task": total_task,
-        "pending_task": pending_task,
-        "in_progress_task": in_progress_task,
-        "completed_task": completed_task
+        "counts": counts
     }
     return render(request, "dashboard/manager-dashboard.html", context)
 
