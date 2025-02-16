@@ -136,3 +136,31 @@ def view_task(request):
     # tasks = Tasks.objects.aggregate(num_task=Count('id'))
     tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})
+
+def update_task(request, id):
+    task = Tasks.objects.get(id=id)
+    task_form = TaskModelForm(instance=task)
+
+    # Handle missing task_detail
+    try:
+        task_detail = task.task_detail
+    except TaskDetail.DoesNotExist:
+        task_detail = None
+
+    task_detail_form = TaskDetailModelForm(instance=task_detail) if task_detail else TaskDetailModelForm()
+
+    if request.method == 'POST':
+        task_form = TaskModelForm(request.POST, instance=task)
+        task_detail_form = TaskDetailModelForm(request.POST, instance=task.task_detail)
+
+        if task_form.is_valid() and task_detail_form.is_valid():
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+
+            messages.success(request, "Task Updated Successfully")
+            return redirect('update-task', id=id)
+        
+    context = {"task_form": task_form, "task_detail_form": task_detail_form}
+    return render(request, 'task_form.html', context)
