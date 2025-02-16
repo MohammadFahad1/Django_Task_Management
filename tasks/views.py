@@ -1,13 +1,46 @@
-from django.shortcuts import render
-from tasks.forms import TaskForm, TaskModelForm
+from django.shortcuts import render, redirect
+from tasks.forms import TaskDetailModelForm, TaskForm, TaskModelForm
 from tasks.models import Employee, Tasks, TaskDetail, Project
 from django.db.models import Q, Count, Avg, Max, Min
 from django.http import HttpResponse
 from datetime import date
+from django.contrib import messages
+
 # Create your views here.
 
 def manager_dashboard(request):
-    return render(request, "dashboard/manager-dashboard.html")
+    # Getting Task Count
+    # total_task = tasks.count()
+    # completed_task = Tasks.objects.filter(status="COMPLETED").count()
+    # in_progress_task = Tasks.objects.filter(status="IN_PROGRESS").count()
+    # pending_task = Tasks.objects.filter(status="PENDING").count()
+    
+    type = request.GET.get('type', 'all')
+
+    counts = Tasks.objects.aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(status="COMPLETED")),
+        in_progress=Count('id', filter=Q(status="IN_PROGRESS")),
+        pending=Count('id', filter=Q(status="PENDING")),
+        )
+    
+    # Retriving task data
+    base_query = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to')
+
+    if type == 'completed':
+        tasks = base_query.filter(status='COMPLETED')
+    elif type == 'in-progress':
+        tasks = base_query.filter(status='IN_PROGRESS')
+    elif type == 'pending':
+        tasks = base_query.filter(status='PENDING')
+    elif type == 'all':
+        tasks = base_query.all()
+
+    context = {
+        "tasks": tasks,
+        "counts": counts
+    }
+    return render(request, "dashboard/manager-dashboard.html", context)
 
 def user_dashboard(request):
     return render(request, "dashboard/user-dashboard.html")
@@ -21,14 +54,22 @@ def test(request):
 
 def create_task(request):
     # employees = Employee.objects.all()
-    form = TaskModelForm() # For GET Request
+    task_form = TaskModelForm() # For GET Request
+    task_detail_form = TaskDetailModelForm()
 
     if request.method == "POST": # For POST Request
-        form = TaskModelForm(request.POST)
-        if form.is_valid():
+        task_form = TaskModelForm(request.POST)
+        task_detail_form = TaskDetailModelForm(request.POST)
+        if task_form.is_valid() and task_detail_form.is_valid():
             """ For Model Form Data """
-            form.save()
-            return render(request, "task_form.html", {"form": form, "message": "Task Added Successfully!"})
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+
+            messages.success(request, "Task Created Successfully!")
+            return redirect('create-task')
+            # return render(request, "task_form.html", {"task_form": task_form, "task_detail_form":task_detail_form, "message": "Task Added Successfully!"})
 
             """ For Django Form Data """
             # data = form.cleaned_data
@@ -45,7 +86,7 @@ def create_task(request):
             
             # return HttpResponse("Task added successfully")
 
-    context = {"form": form}
+    context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
 def view_task(request):
