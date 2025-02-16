@@ -1,5 +1,5 @@
 from django import forms
-from tasks.models import Tasks
+from tasks.models import TaskDetail, Tasks
 
 # Regular Django Form
 class TaskForm(forms.Form):
@@ -69,6 +69,16 @@ class TaskModelForm(StyledFormMixin, forms.ModelForm):
         #         'class': 'mb-2'
         #     })
         # }
+    """ Using Mixin Widget """
+    def __init__(self, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.apply_styled_widgets()
+
+class TaskDetailModelForm(StyledFormMixin, forms.ModelForm):
+    class Meta:
+        model = TaskDetail
+        fields = ['priority', 'notes']
+
     """ Using Mixin Widget """
     def __init__(self, *arg, **kwarg):
         super().__init__(*arg, **kwarg)
