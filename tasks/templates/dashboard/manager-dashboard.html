@@ -3,6 +3,9 @@
 {% block tasks %}
 {% comment %} <!-- Task Table Starts --> {% endcomment %}
   {% comment %} <!-- Table Headings --> {% endcomment %}
+   {% for message in messages %}
+      <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green;{% endif %} padding: 8px">{{message}}</p>
+   {% endfor %}
   <div
     class="bg-white rounded-xl shadow-sm border-b border-gray-100 text-sm text-gray-500"
   >
@@ -18,7 +21,11 @@
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 bg-green-500 rounded-full"></div>
           <div><span>{{task.title}}</span></div>
-          <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4  text-white">Edit</a>
+          <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4 text-white">Edit</a>
+          <form action="{% url "delete-task" task.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 p-4 text-white">Delete</button>
+          </form>
         </div>
         <div>
           <span class="px-3 py-1 bg-blue-50 rounded-full text-blue-600 text-sm"
