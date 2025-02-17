@@ -18,6 +18,7 @@
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 bg-green-500 rounded-full"></div>
           <div><span>{{task.title}}</span></div>
+          <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4  text-white">Edit</a>
         </div>
         <div>
           <span class="px-3 py-1 bg-blue-50 rounded-full text-blue-600 text-sm"
