@@ -10,7 +10,19 @@
     <div>
         <form action="" method="post">
             {% csrf_token %}
-            {{form.as_p}}
+            {% for field in form %}
+                <p>
+                    <label for="{{field.id_for_label}}">{{field.label}}</label>
+                    {{field}}
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endfor %}
             <button type="submit">Sign Up</button>
         </form>
     </div>
