@@ -30,10 +30,18 @@ class CustomRegistrationForm(forms.ModelForm):
             errors.append("Password must be at least 8 character long.")
         # elif re.fullmatch(r'[A-Za-z0-9@#%^&+=]', password1):
         #     errors.append("Password must include uppercase, lowercase, numeric and special characters.")
-        elif 'abc' not in password1:
+        if 'abc' not in password1:
             errors.append("Password must include abc.")
         
         if errors:
             raise forms.ValidationError(errors)
 
         return password1
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password1 != confirm_password:
+            raise forms.ValidationError("Password do not match")

@@ -8,6 +8,11 @@
 <body>
     <h1>Welcome to authentication system</h1>
     <div>
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                {{error}}
+            {% endfor %}
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
             {% for field in form %}

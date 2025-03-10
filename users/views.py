@@ -20,7 +20,7 @@ def sign_up(request):
         #         User.objects.create(username=username, password=password)
         #     else:
         #         print("Password didn't matched.")
-        # else:
-        #     print("form is not valid")
+        else:
+            print("form is not valid")
     
     return render(request, 'registration/register.html', {"form": form})
