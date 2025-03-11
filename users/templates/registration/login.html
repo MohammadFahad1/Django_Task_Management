@@ -8,6 +8,9 @@
 <body>
     <div>
         <h1>User Login</h1>
+        {% for message in messages %}
+            <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} padding: 8px">{{message}}</p>
+        {% endfor %}
         <form method="POST">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Enter Username">
