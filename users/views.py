@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from users.forms import CustomRegistrationForm, RegisterForm
@@ -42,3 +42,8 @@ def sign_in(request):
             messages.error(request, "Invalid username or password")
         
     return render(request, 'registration/login.html')
+
+def sign_out(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect('sign-in')
