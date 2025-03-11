@@ -1,13 +1,20 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/output.css" %}">
     <title>Register</title>
 </head>
-<body>
+<body class="max-w-3xl mx-auto">
     <h1>Welcome to authentication system</h1>
     <div>
+        {% if messages %}
+            {% for message in messages %}
+                <p style="{% if message.tags == 'error' %}background: pink; color: red; {% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green; {% endif %} padding: 8px">{{message}}</p>
+            {% endfor %}
+        {% endif %}
         {% if form.non_field_errors %}
             {% for error in form.non_field_errors %}
                 {{error}}
@@ -28,7 +35,7 @@
                     {% endif %}
                 </p>
             {% endfor %}
-            <button type="submit">Sign Up</button>
+            <button type="submit" class="bg-green-500 text-slate-50 rounded px-3 py-2 hover:bg-green-600">Sign Up</button>
         </form>
     </div>
 </body>
