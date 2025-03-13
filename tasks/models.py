@@ -84,14 +84,14 @@ def notify_task_creation(sender, instance, **kwargs):
     
     instance.is_completed = True """
 
-@receiver(m2m_changed, sender=Tasks)
-def notify_employees_on_task_creation(sender, instance, created, **kwargs):
-    if created:
+@receiver(m2m_changed, sender=Tasks.assigned_to.through)
+def notify_employees_on_task_creation(sender, instance, action, **kwargs):
+    if action == 'post_add':
         assigned_emails = [emp.email for emp in instance.assigned_to.all()]
         print("Checking", instance)
         send_mail(
             "New Task Assigned",
-            "You have been assigned to the task: {instance.title}",
+            f"You have been assigned to the task: {instance.title}",
             "36fahad@gmail.com",
             assigned_emails,
             fail_silently=False,
