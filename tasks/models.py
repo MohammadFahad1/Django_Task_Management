@@ -1,4 +1,7 @@
+from asyncio import Task
 from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
@@ -60,3 +63,22 @@ class Project(models.Model):
 
 # task = onekgula employee ekta task
 # employee = onekgula task er jonno assign ache
+
+# Signals
+""" @receiver(post_save, sender=Tasks)
+def notify_task_creation(sender, instance, created, **kwargs):
+    print("sender", sender)
+    print("instance", instance)
+    print(kwargs)
+    print("created", created)
+    if created:
+        instance.is_completed = True
+        instance.save() """
+
+@receiver(pre_save, sender=Tasks)
+def notify_task_creation(sender, instance, **kwargs):
+    print("sender", sender)
+    print("instance", instance)
+    print(kwargs)
+    
+    instance.is_completed = True
