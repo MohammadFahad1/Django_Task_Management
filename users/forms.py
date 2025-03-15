@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
 import re
@@ -65,3 +65,7 @@ class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
 
         if password1 and confirm_password and password1 != confirm_password:
             raise forms.ValidationError("Password do not match.")
+
+class LoginForm(StyledFormMixin,AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

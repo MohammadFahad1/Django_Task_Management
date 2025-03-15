@@ -1,21 +1,41 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <link rel="stylesheet" href="{% static "css/output.css" %}">
 </head>
 <body>
     <div>
         <h1>User Login</h1>
-        {% for message in messages %}
-            <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} padding: 8px">{{message}}</p>
-        {% endfor %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="{% if message.tags == 'error' %}background: pink; color: red; {% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green; {% endif %} padding: 8px">{{message}}</p>
+            {% endfor %}
+        {% endif %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                {{error}}
+            {% endfor %}
+        {% endif %}
         <form method="POST">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Enter Username">
-            <input type="password" name="password" placeholder="Enter Password">
-            <button type="submit">Login</button>
+            {% for field in form %}
+                <p>
+                    <label for="{{field.id_for_label}}">{{field.label}}</label>
+                    {{field}}
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{error}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <button type="submit" class="bg-green-500 text-slate-50 rounded px-3 py-2 hover:bg-green-600">Login</button>
         </form>
     </div>
 </body>
