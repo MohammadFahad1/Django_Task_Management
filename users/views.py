@@ -12,9 +12,12 @@ def sign_up(request):
     if request.method == 'POST':
         form = CustomRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account created successfully")
-            return redirect('sign-up')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            messages.success(request, "A confirmation email has been sent to your email address. Please click on the link to activate your account.")
+            return redirect('sign-in')
         #     username = form.cleaned_data.get('username')
         #     password = form.cleaned_data.get('password1')
         #     confirm_password = form.cleaned_data.get('password2')
