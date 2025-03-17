@@ -76,3 +76,19 @@ def activate_user(request, user_id, token):
     except User.DoesNotExist:
         messages.error(request, "Invalid activation link")
         return redirect('sign-in')
+
+
+def admin_dashboard(request):
+    return render(request, 'admin/dashboard.html')
+""" 
+    Admin
+        - Sobkisui
+    Manager
+        - Project
+        - Task Create
+    Employee
+        - Task read
+        - Task update
+    
+        Role Based Access Control (RBAC)
+"""
