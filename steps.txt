@@ -17,6 +17,10 @@ Create a Django project:
 ---------------------------
 django-admin startproject task_management .
 
+Create a Django App
+--------------------
+python manage.py startapp appName
+
 to run project:
 -----------------
 python manage.py runserver
