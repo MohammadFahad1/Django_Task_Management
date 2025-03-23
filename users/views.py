@@ -108,4 +108,7 @@ def assign_role(request, user_id):
         - Task update
     
         Role Based Access Control (RBAC)
+
+        https://medium.com/@fahimad/role-based-access-control-rbac-in-django-1955b31d93a5
+        https://docs.djangoproject.com/en/5.1/topics/auth/
 """
