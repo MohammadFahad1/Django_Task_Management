@@ -2,7 +2,7 @@ from ast import Assign
 from email import message
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -109,6 +109,10 @@ def create_group(request):
             return redirect('create-group')
     
     return render(request, 'admin/create_group.html', {"form": form})
+
+def group_list(request):
+    groups = Group.objects.all()
+    return render(request, 'admin/group_list.html', {"groups": groups})
 
 """ 
     Admin
