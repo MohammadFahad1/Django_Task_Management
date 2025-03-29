@@ -149,3 +149,4 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 FRONTEND_URL='http://127.0.0.1:8000'
+LOGIN_URL = 'sign-in'

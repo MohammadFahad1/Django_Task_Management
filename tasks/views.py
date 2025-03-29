@@ -5,9 +5,18 @@ from django.db.models import Q, Count, Avg, Max, Min
 from django.http import HttpResponse
 from datetime import date
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+
+
+def is_manager(user):
+    return user.groups.filter(name='Manager').exists()
+
+def is_employee(user):
+    return user.groups.filter(name='Employee').exists()
 
 # Create your views here.
 
+user_passes_test(is_manager, login_url='no-permission')
 def manager_dashboard(request):
     # Getting Task Count
     # total_task = tasks.count()
@@ -42,6 +51,7 @@ def manager_dashboard(request):
     }
     return render(request, "dashboard/manager-dashboard.html", context)
 
+@user_passes_test(is_employee, login_url='no-permission')
 def user_dashboard(request):
     return render(request, "dashboard/user-dashboard.html")
 
@@ -52,6 +62,8 @@ def test(request):
     }
     return render(request, "test.html", context)
 
+@login_required
+@permission_required('tasks.add_task', login_url='no-permission')
 def create_task(request):
     # employees = Employee.objects.all()
     task_form = TaskModelForm() # For GET Request
@@ -89,6 +101,8 @@ def create_task(request):
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
+@login_required
+@permission_required('tasks.view_task', login_url='no-permission')
 def view_task(request):
     """ 
     # Show completed tasks
@@ -137,6 +151,8 @@ def view_task(request):
     tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})
 
+@login_required
+@permission_required('tasks.change_task', login_url='no-permission')
 def update_task(request, id):
     task = Tasks.objects.get(id=id)
     task_form = TaskModelForm(instance=task)
@@ -166,6 +182,8 @@ def update_task(request, id):
     return render(request, 'task_form.html', context)
 
 # Delete Task view
+@login_required
+@permission_required('tasks.delete_task', login_url='no-permission')
 def delete_task(request, id):
     if request.method == 'POST':
         task = Tasks.objects.get(id=id)
