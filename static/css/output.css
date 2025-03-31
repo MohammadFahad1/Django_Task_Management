@@ -796,6 +796,10 @@ video {
   max-width: 720px;
 }
 
+.max-w-\[1450px\] {
+  max-width: 1450px;
+}
+
 .table-auto {
   table-layout: auto;
 }

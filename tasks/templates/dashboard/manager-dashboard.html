@@ -6,47 +6,50 @@
    {% for message in messages %}
       <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green;{% endif %} padding: 8px">{{message}}</p>
    {% endfor %}
-  <div
-    class="bg-white rounded-xl shadow-sm border-b border-gray-100 text-sm text-gray-500"
-  >
-    <div class="grid grid-cols-4 p-4 border-b border-gray-100">
-      <div>TASK TITLE</div>
-      <div>PRIORITY</div>
-      <div>TEAM</div>
-      <div>CREATED AT</div>
-    </div>
-    {% for task in tasks %}
-      {% comment %} <!-- Item-1 Starts --> {% endcomment %}
-      <div class="grid grid-cols-4 items-center p-4">
-        <div class="flex items-center gap-2">
-          <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-          <div><span>{{task.title}}</span></div>
-          <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4 text-white">Edit</a>
-          <form action="{% url "delete-task" task.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="bg-red-500 p-4 text-white">Delete</button>
-          </form>
-        </div>
-        <div>
-          <span class="px-3 py-1 bg-blue-50 rounded-full text-blue-600 text-sm"
-            >{{task.task_detail.get_priority_display}}</span
-          >
-        </div>
-        <div>
-          <div class="flex -space-x-2">
-            {% for emp in task.assigned_to.all %}
-              <div class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white">
-                {{emp.name|slice:':1'}}
-              </div>
-            {% endfor %}
+  <div class="max-w-[1450px] mx-auto px-8">
+    <div
+      class="bg-white rounded-xl shadow-sm border-b border-gray-100 text-sm text-gray-500"
+    >
+      <div class="grid grid-cols-4 p-4 border-b border-gray-100">
+        <div>TASK TITLE</div>
+        <div>PRIORITY</div>
+        <div>TEAM</div>
+        <div>CREATED AT</div>
+      </div>
+      {% for task in tasks %}
+        {% comment %} <!-- Item-1 Starts --> {% endcomment %}
+        <div class="grid grid-cols-4 items-center p-4 mb-8">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div><span>{{task.title}}</span></div>
+            <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4 text-white">Edit</a>
+            <form action="{% url "delete-task" task.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="bg-red-500 p-4 text-white">Delete</button>
+            </form>
+          </div>
+          <div>
+            <span class="px-3 py-1 bg-blue-50 rounded-full text-blue-600 text-sm"
+              >{{task.task_detail.get_priority_display}}</span
+            >
+          </div>
+          <div>
+            <div class="flex -space-x-2">
+              {% for emp in task.assigned_to.all %}
+                <div class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white">
+                  {{emp.name|slice:':1'}}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div>
+            <span class="text-gray-500 text-sm">{{task.due_date|timesince}} ago</span>
           </div>
         </div>
-        <div>
-          <span class="text-gray-500 text-sm">{{task.due_date|timesince}} ago</span>
-        </div>
-      </div>
-      {% comment %} <!-- Item-1 Ends --> {% endcomment %}
+        {% comment %} <!-- Item-1 Ends --> {% endcomment %}
     {% endfor %}
-
+    </div>
+  </div>
+  {% comment %} <!-- Task Table Ends --> {% endcomment %}
 </section>
 {% endblock tasks %}
