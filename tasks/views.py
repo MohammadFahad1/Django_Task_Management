@@ -63,7 +63,7 @@ def test(request):
     return render(request, "test.html", context)
 
 @login_required
-@permission_required('tasks.add_task', login_url='no-permission')
+@permission_required('tasks.add_tasks', login_url='no-permission')
 def create_task(request):
     # employees = Employee.objects.all()
     task_form = TaskModelForm() # For GET Request
@@ -102,7 +102,7 @@ def create_task(request):
     return render(request, "task_form.html", context)
 
 @login_required
-@permission_required('tasks.view_task', login_url='no-permission')
+@permission_required('tasks.view_tasks', login_url='no-permission')
 def view_task(request):
     """ 
     # Show completed tasks
@@ -152,7 +152,7 @@ def view_task(request):
     return render(request, "show_task.html", {"tasks": tasks})
 
 @login_required
-@permission_required('tasks.change_task', login_url='no-permission')
+@permission_required('tasks.change_tasks', login_url='no-permission')
 def update_task(request, id):
     task = Tasks.objects.get(id=id)
     task_form = TaskModelForm(instance=task)
@@ -183,7 +183,7 @@ def update_task(request, id):
 
 # Delete Task view
 @login_required
-@permission_required('tasks.delete_task', login_url='no-permission')
+@permission_required('tasks.delete_tasks', login_url='no-permission')
 def delete_task(request, id):
     if request.method == 'POST':
         task = Tasks.objects.get(id=id)
@@ -193,3 +193,9 @@ def delete_task(request, id):
     else:
         messages.error(request, "Something went wrong")
         return redirect('manager-dashboard')
+
+@login_required
+@permission_required('tasks.view_tasks', login_url='no-permission')
+def task_details(request, task_id):
+    task = Tasks.objects.get(id=task_id)
+    return render(request, 'task_details.html', {'task': task})
