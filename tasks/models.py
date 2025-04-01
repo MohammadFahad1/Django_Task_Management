@@ -1,5 +1,6 @@
 from asyncio import Task
 from django.db import models
+from django.contrib.auth.models import User
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
@@ -22,12 +23,12 @@ class Tasks(models.Model):
     std_id = models.CharField(max_length=200, primary_key=True)
     """
     project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1, related_name="tasks")
-    assigned_to = models.ManyToManyField(Employee, related_name="tasks")
+    # assigned_to = models.ManyToManyField(Employee, related_name="tasks")
+    assigned_to = models.ManyToManyField(User, related_name="tasks")
     title = models.CharField(max_length=250, default="")
     description = models.TextField()
     due_date = models.DateField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="PENDING")
-    is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
