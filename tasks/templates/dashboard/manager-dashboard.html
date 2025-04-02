@@ -39,7 +39,7 @@
             <div class="flex -space-x-2">
               {% for emp in task.assigned_to.all %}
                 <div class="w-8 h-8 bg-blue-500 rounded-full text-white flex items-center justify-center text-sm border-2 border-white">
-                  {{emp.name|slice:':1'}}
+                  {{emp.first_name|slice:':1'}}
                 </div>
               {% endfor %}
             </div>
