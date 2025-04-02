@@ -16,7 +16,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% comment %} {{form.as_p}} {% endcomment %}
              {{task_form}}
