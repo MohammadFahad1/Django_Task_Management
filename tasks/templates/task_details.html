@@ -82,12 +82,11 @@
               </div>
             </div>
             <div>
-              <button
-                class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                type="submit"
-              >
-                Delete Task
-              </button>
+              <a href="{% url 'update-task' task.id %}" class="bg-green-500 p-4 text-white">Edit</a>
+              <form action="{% url "delete-task" task.id %}" method="post">
+                {% csrf_token %}
+                <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" type="submit">Delete Task</button>
+              </form>
             </div>
           </div>
         </div>
