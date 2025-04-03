@@ -198,4 +198,15 @@ def delete_task(request, id):
 @permission_required('tasks.view_tasks', login_url='no-permission')
 def task_details(request, task_id):
     task = Tasks.objects.get(id=task_id)
-    return render(request, 'task_details.html', {'task': task})
+    status_choices = Tasks.STATUS_CHOICES
+
+    if request.method == 'POST':
+        selected_status = request.POST.get('task_status')
+        task.status = selected_status
+        if selected_status in [status[0] for status in status_choices]:
+            task.status = selected_status
+            task.save()
+            return redirect('task-details', task_id=task_id)
+        # task.save()
+
+    return render(request, 'task_details.html', {'task': task, 'status_choices': status_choices})

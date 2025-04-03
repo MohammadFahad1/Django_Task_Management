@@ -7,7 +7,7 @@ class Tasks(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),
-        ('COMPLETED', 'Completed')
+        ('COMPLETED', 'Completed'),
     ]
     
     """
