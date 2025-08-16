@@ -7,6 +7,20 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from users.views import is_admin
+from django.http import HttpResponse
+from django.views import View
+
+class Greetings(View):
+    greetings = "Hello, World!"
+
+    def get(self, request):
+        return HttpResponse(self.greetings)
+    
+class HiGreetings(Greetings):
+    greetings = "Hi, World!"
+
+class HelloGreetings(Greetings):
+    greetings = "Hello, World, How are you ?"
 
 
 def is_manager(user):
