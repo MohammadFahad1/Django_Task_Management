@@ -81,7 +81,6 @@ def test(request):
 @login_required
 @permission_required('tasks.add_tasks', login_url='no-permission')
 def create_task(request):
-    # employees = Employee.objects.all()
     task_form = TaskModelForm() # For GET Request
     task_detail_form = TaskDetailModelForm()
 
@@ -97,25 +96,32 @@ def create_task(request):
 
             messages.success(request, "Task Created Successfully!")
             return redirect('create-task')
-            # return render(request, "task_form.html", {"task_form": task_form, "task_detail_form":task_detail_form, "message": "Task Added Successfully!"})
-
-            """ For Django Form Data """
-            # data = form.cleaned_data
-            # title = data.get('title')
-            # description = data.get('description')
-            # due_date = data.get('due_date')
-            # assigned_to = data.get('assigned_to')
-
-            # task = Tasks.objects.create(title=title, description=description, due_date=due_date)
-            # # Assign employees to task
-            # for emp_id in assigned_to:
-            #     employee = Employee.objects.get(id=emp_id)
-            #     task.assigned_to.add(employee)
-            
-            # return HttpResponse("Task added successfully")
 
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
+
+
+class CreateTask(View):
+    task_model_form = TaskModelForm
+    task_detail_model_form = TaskDetailModelForm
+    template_name = "task_form.html"
+
+    def get(self, request, *args, **kwargs):
+        task_form = self.task_model_form() # For GET Request
+        task_detail_form = self.task_detail_model_form()
+        context = {"task_form": task_form, "task_detail_form": task_detail_form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        task_form = self.task_model_form(request.POST)
+        task_detail_form = self.task_detail_model_form(request.POST, request.FILES)
+        if task_form.is_valid() and task_detail_form.is_valid():
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+            messages.success(request, "Task Created Successfully!")
+            return redirect('create-task')
 
 @login_required
 @permission_required('tasks.view_tasks', login_url='no-permission')
