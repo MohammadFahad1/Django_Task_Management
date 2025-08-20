@@ -55,25 +55,3 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-# task = onekgula employee ekta task
-# employee = onekgula task er jonno assign ache
-
-# Signals
-""" @receiver(post_save, sender=Tasks)
-def notify_task_creation(sender, instance, created, **kwargs):
-    print("sender", sender)
-    print("instance", instance)
-    print(kwargs)
-    print("created", created)
-    if created:
-        instance.is_completed = True
-        instance.save() """
-
-""" @receiver(pre_save, sender=Tasks)
-def notify_task_creation(sender, instance, **kwargs):
-    print("sender", sender)
-    print("instance", instance)
-    print(kwargs)
-    
-    instance.is_completed = True """
-
