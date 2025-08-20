@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.utils.decorators import method_decorator
 from users.views import is_admin
 from django.http import HttpResponse
 from django.views import View
@@ -100,8 +101,10 @@ def create_task(request):
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
-
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('tasks.add_tasks', login_url='no-permission'), name='dispatch')
 class CreateTask(View):
+    """ For creating task using Class Based View """
     task_model_form = TaskModelForm
     task_detail_model_form = TaskDetailModelForm
     template_name = "task_form.html"
