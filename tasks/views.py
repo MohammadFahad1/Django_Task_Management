@@ -10,6 +10,9 @@ from django.utils.decorators import method_decorator
 from users.views import is_admin
 from django.http import HttpResponse
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic.base import ContextMixin
+
 
 class Greetings(View):
     greetings = "Hello, World!"
@@ -104,18 +107,29 @@ def create_task(request):
 # Decorators for views
 # @method_decorator(login_required, name='dispatch')
 # @method_decorator(permission_required('tasks.add_tasks', login_url='no-permission'), name='dispatch')
-decorators = [login_required, permission_required('tasks.add_tasks', login_url='no-permission')]
-@method_decorator(decorators, name='dispatch')
-class CreateTask(View):
+# decorators = [login_required, permission_required('tasks.add_tasks', login_url='no-permission')]
+# @method_decorator(decorators, name='dispatch')
+
+class CreateTask(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin, View):
+    permission_required = 'tasks.add_tasks'
+    login_url = 'sign-in'
+
     """ For creating task using Class Based View """
     task_model_form = TaskModelForm
     task_detail_model_form = TaskDetailModelForm
     template_name = "task_form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['task_form'] = kwargs.get('task_form', self.task_model_form())
+        context['task_detail_form'] = kwargs.get('task_detail_form', self.task_detail_model_form())
+        return context
+
     def get(self, request, *args, **kwargs):
         task_form = self.task_model_form() # For GET Request
         task_detail_form = self.task_detail_model_form()
-        context = {"task_form": task_form, "task_detail_form": task_detail_form}
+        # context = {"task_form": task_form, "task_detail_form": task_detail_form}
+        context = self.get_context_data()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -127,7 +141,9 @@ class CreateTask(View):
             task_detail.task = task
             task_detail.save()
             messages.success(request, "Task Created Successfully!")
-            return redirect('create-task')
+            context = self.get_context_data(task_form=task_form, task_detail_form=task_detail_form)
+            return render(request, self.template_name, context)
+            # return redirect('create-task')
 
 @login_required
 @permission_required('tasks.view_tasks', login_url='no-permission')
