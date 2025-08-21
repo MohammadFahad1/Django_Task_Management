@@ -101,8 +101,11 @@ def create_task(request):
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('tasks.add_tasks', login_url='no-permission'), name='dispatch')
+# Decorators for views
+# @method_decorator(login_required, name='dispatch')
+# @method_decorator(permission_required('tasks.add_tasks', login_url='no-permission'), name='dispatch')
+decorators = [login_required, permission_required('tasks.add_tasks', login_url='no-permission')]
+@method_decorator(decorators, name='dispatch')
 class CreateTask(View):
     """ For creating task using Class Based View """
     task_model_form = TaskModelForm
