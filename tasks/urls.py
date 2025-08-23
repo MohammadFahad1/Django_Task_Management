@@ -1,5 +1,5 @@
 from django.urls import path
-from tasks.views import CreateTask, create_task, dashboard, manager_dashboard, task_details, user_dashboard, test, view_task, update_task, delete_task, Greetings, HiGreetings, HelloGreetings, ViewProject
+from tasks.views import CreateTask, TaskDetail, create_task, dashboard, manager_dashboard, task_details, user_dashboard, test, view_task, update_task, delete_task, Greetings, HiGreetings, HelloGreetings, ViewProject
 # from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -11,7 +11,8 @@ urlpatterns = [
     path('create-task', CreateTask.as_view(), name='create-task'),
     # path('view_project/', view_task, name="view-task"),
     path('view_project/', ViewProject.as_view(), name="view-project"),
-    path('task/<int:task_id>/details/', task_details, name="task-details"),
+    # path('task/<int:task_id>/details/', task_details, name="task-details"),
+    path('task/<int:task_id>/details/', TaskDetail.as_view(), name="task-details"),
     path('update-task/<int:id>/', update_task, name='update-task'),
     path('delete-task/<int:id>/', delete_task, name='delete-task'),
     path('dashboard/', dashboard, name='dashboard'),
