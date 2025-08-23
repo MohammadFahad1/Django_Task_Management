@@ -3,24 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tasks</title>
+    <title>All Projects</title>
 </head>
 <body>
     <div>
-        {% comment %} <ul>
-            {% for emp in tasks %}
-                {% comment %} <li>{{task.title}} - ({{task.due_date}}) - {{task.status}} - {{task.task_detail.priority}}</li> 
-                <li>{{emp.name}}
-                    <ol>
-                        {% for task in emp.tasks.all %}
-                            <li>{{task.title}}</li>
-                        {% endfor %}
-                    </ol>
-                </li>
-            {% endfor %}
-        </ul> {% endcomment %}
-        {% for task in tasks %}
-            <p>{{task.name}} - {{task.num_task}}</p>
+        {% for project in projects %}
+            <p>{{project.name}} - {{project.num_task}}</p>
         {% endfor %}
     </div>
 </body>

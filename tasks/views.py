@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.base import ContextMixin
+from django.views.generic import ListView
 
 
 class Greetings(View):
@@ -148,52 +149,22 @@ class CreateTask(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin, View
 @login_required
 @permission_required('tasks.view_tasks', login_url='no-permission')
 def view_task(request):
-    """ 
-    # Show completed tasks
-    task = Tasks.objects.filter(status="COMPLETED")
-    """
-    """ 
-    # Show Todays Tasks
-    tasks = Tasks.objects.filter(due_date=date.today())
-    """
-
-    """ # Show tasks with low priority
-    tasks = TaskDetail.objects.exclude(priority="H")
-    return render(request, "show_task.html", {"tasks": tasks}) """
-
-    """ # Show the task that contains word paper
-    tasks = Tasks.objects.filter(title__icontains = "we", status__icontains="completed") """
-
-    """ # Show the task which are pending or in progress
-    tasks = Tasks.objects.filter(Q(status="PENDING") | Q(status="IN_PROGRESS")) """
-    """ 
-    # To check if any result exists
-    tasks = Tasks.objects.filter(status="COMPLETED").exists() """
-    """ 
-    # Retrieve all data from tasks model
-    tasks = Tasks.objects.all()
-    # task3 = Tasks.objects.get(id=3)
-    # task3 = Tasks.objects.get(pk=3)
-
-    # Fetch the first task
-    task3 = Tasks.objects.first()
-    return render(request, "show_task.html", {"tasks": tasks, "task3": task3})
-    """
-    
-    """ Select related (ForeignKey, OneToOneField) """
-    # tasks = Tasks.objects.select_related('task_detail').all()
-    # tasks = TaskDetail.objects.select_related('task').all()
-    # tasks = Tasks.objects.select_related('project').all()
-    
-    """ prefetch_related (reverce foreignkey, many to many) """
-    # tasks = Project.objects.prefetch_related("tasks").all()
-    # tasks = Tasks.objects.prefetch_related("assigned_to").all()
-    # tasks = Employee.objects.prefetch_related("tasks").all()
-
-    """ Aggregate """
-    # tasks = Tasks.objects.aggregate(num_task=Count('id'))
     tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})
+
+# view_project_decorators = [login_required, permission_required('tasks.view_tasks', login_url='no-permission')]
+# @method_decorator(view_project_decorators, name='dispatch')
+class ViewProject(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'projects.view_project'
+    login_url = 'sign-in'
+
+    model = Project
+    template_name = "show_task.html"
+    context_object_name = "projects"
+
+    def get_queryset(self):
+        return Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
+
 
 @login_required
 @permission_required('tasks.change_tasks', login_url='no-permission')
