@@ -13,6 +13,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.base import ContextMixin
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import UpdateView
 
 
 class Greetings(View):
@@ -226,6 +227,8 @@ def task_details(request, task_id):
 
     return render(request, 'task_details.html', {'task': task, 'status_choices': status_choices})
 
+decorators =[login_required, permission_required('tasks.view_tasks', login_url='no-permission')]
+@method_decorator(decorators, name='dispatch')
 class TaskDetail(DetailView):
     model = Tasks
     template_name = "task_details.html"
@@ -243,6 +246,17 @@ class TaskDetail(DetailView):
         task.status = selected_status
         task.save()
         return redirect('task-details', task_id=task.id)
+
+class UpdateTask(UpdateView):
+    model = Tasks
+    form_class = TaskModelForm
+    template_name = "task_form.html"
+    context_object_name = "task"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        
 
 @login_required
 def dashboard(request):
