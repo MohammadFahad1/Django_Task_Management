@@ -1,3 +1,4 @@
+from asyncio import Task
 from django.shortcuts import render, redirect
 from tasks.forms import TaskDetailModelForm, TaskForm, TaskModelForm
 from tasks.models import Tasks, TaskDetail, Project
@@ -252,11 +253,42 @@ class UpdateTask(UpdateView):
     form_class = TaskModelForm
     template_name = "task_form.html"
     context_object_name = "task"
+    pk_url_kwarg = "id"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         
+        context['task_form'] = self.get_form()
+        if hasattr(self.object, 'task_detail'):
+            context['task_detail_form'] = TaskDetailModelForm(instance=self.object.task_detail)
+        else:
+            context['task_detail_form'] = TaskDetailModelForm()
+
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        task_form = TaskModelForm(request.POST, instance=self.object)
+        task_detail_form = TaskDetailModelForm(request.POST, request.FILES, instance=getattr(self.object, 'task_detail', None))
+
+        if task_form.is_valid() and task_detail_form.is_valid():
+            task = task_form.save()
+            task_detail = task_detail_form.save(commit=False)
+            task_detail.task = task
+            task_detail.save()
+
+            messages.success(request, "Task Updated Successfully")
+
+        return redirect('update-task', id=task.id)
+
+
+
+@login_required
+def dashboard(request):
+    if is_manager(request.user):
+        return context
+
+    
 
 @login_required
 def dashboard(request):
