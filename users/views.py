@@ -11,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
+from django.contrib.auth.views import LoginView
 
 # Test for users
 def is_admin(user):
@@ -63,6 +64,13 @@ def sign_in(request):
         #     messages.error(request, "Invalid username or password")
         
     # return render(request, 'registration/login.html')
+
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else super().get_success_url()
 
 @login_required
 def sign_out(request):

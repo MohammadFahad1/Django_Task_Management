@@ -1,11 +1,11 @@
 from django import template
 from django.urls import path
-from users.views import admin_dashboard, create_group, group_list, sign_in, sign_out, sign_up, activate_user, assign_role
+from users.views import CustomLoginView, admin_dashboard, create_group, group_list, sign_in, sign_out, sign_up, activate_user, assign_role
 from django.contrib.auth.views import LoginView
 urlpatterns = [
     path('sign-up/', sign_up, name="sign-up"),
     # path('sign-in/', sign_in, name="sign-in"),
-    path('sign-in/', LoginView.as_view(), name="sign-in"),
+    path('sign-in/', CustomLoginView.as_view(), name="sign-in"),
     path('sign-out/', sign_out, name="logout"),
     path('activate/<int:user_id>/<str:token>/', activate_user, name="activate-user"),
     path('admin/dashboard', admin_dashboard, name="admin-dashboard"),
