@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
 from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
 
 # Test for users
 def is_admin(user):
@@ -73,6 +74,7 @@ class CustomLoginView(LoginView):
         next_url = self.request.GET.get('next')
         return next_url if next_url else super().get_success_url()
 
+@method_decorator(login_required, name='dispatch')
 class ProfileView(TemplateView):
     template_name = 'accounts/profile.html'
 
