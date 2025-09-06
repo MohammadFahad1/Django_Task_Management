@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +33,8 @@
         </div>
         <div class="bg-white p-6 rounded-xl shadow w-full">
             <p><span class="font-semibold">User role:</span> <mark>{{ groups.first.name }}</mark></p>
-            <p><span class="font-semibold">Member since:</span> {{ member_since }}</p>
-            <p><span class="font-semibold">Last login:</span> {{ last_login }}</p>
+            <p><span class="font-semibold">Member since:</span> {{ member_since|humanized_date }}</p>
+            <p><span class="font-semibold">Last login:</span> {{ last_login|humanized_date }}</p>
         </div>
       </div>
     </section>
