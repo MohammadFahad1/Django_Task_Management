@@ -7,7 +7,7 @@ from tasks.models import Tasks
 def notify_employees_on_task_creation(sender, instance, action, **kwargs):
     if action == 'post_add':
         assigned_emails = [emp.email for emp in instance.assigned_to.all()]
-        print("Checking", instance)
+        # print("Checking", instance)
         send_mail(
             "New Task Assigned",
             f"You have been assigned to the task: {instance.title}",
@@ -21,4 +21,4 @@ def delete_associate_details(sender, instance, **kwargs):
     if instance.task_detail:
         instance.task_detail.delete()
 
-        print("Deleted successfully")
+        # print("Deleted successfully")
