@@ -6,19 +6,43 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from users.forms import CustomRegistrationForm, LoginForm, RegisterForm, AssignRoleForm, CreateGroupForm, CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm
+from users.forms import CustomRegistrationForm, LoginForm, RegisterForm, AssignRoleForm, CreateGroupForm, CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm, EditProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
+from users.models import UserProfile
 
 # Test for users
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
+
+class EditProfileView(UpdateView):
+    model = User
+    form_class = EditProfileForm
+    template_name = 'accounts/update_profile.html'
+    context_object_name = 'form'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        context['form'] = self.form_class(instance=self.object, userprofile=user_profile)
+        return context
+    
+    def form_valid(self, form):
+        form.save(commit=True)
+        messages.success(self.request, "Your profile has been updated successfully.")
+        return redirect('profile')
+
+
 
 # Create your views here.
 def sign_up(request):

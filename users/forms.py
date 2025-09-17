@@ -2,7 +2,6 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth.models import User, Permission, Group
 from django import forms
 import re
-
 from tasks.forms import StyledFormMixin
 
 class RegisterForm(UserCreationForm):
@@ -96,3 +95,40 @@ class CustomPasswordResetForm(StyledFormMixin, PasswordResetForm):
 
 class CustomPasswordResetConfirmForm(StyledFormMixin, SetPasswordForm):
     pass
+
+class EditProfileForm(StyledFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name']
+    
+    bio = forms.CharField(widget=forms.Textarea, required=False)
+    profile_image = forms.ImageField(required=False)
+    location = forms.CharField(max_length=100, required=False)
+    birth_date = forms.DateField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        print(kwargs)
+        super().__init__(*args, **kwargs)
+
+        if self.userprofile:
+            self.fields['bio'].initial = self.userprofile.bio
+            self.fields['profile_image'].initial = self.userprofile.profile_images
+            self.fields['location'].initial = self.userprofile.location
+            self.fields['birth_date'].initial = self.userprofile.birth_date
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        if self.userprofile:
+            self.userprofile.bio = self.cleaned_data.get('bio')
+            self.userprofile.profile_images = self.cleaned_data.get('profile_image')
+            self.userprofile.location = self.cleaned_data.get('location')
+            self.userprofile.birth_date = self.cleaned_data.get('birth_date')
+            
+            if commit:
+                self.userprofile.save()
+
+        if commit:
+            user.save()
+
+        return user
