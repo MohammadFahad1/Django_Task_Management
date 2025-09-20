@@ -101,13 +101,13 @@ class EditProfileForm(StyledFormMixin, forms.ModelForm):
         model = User
         fields = ['email', 'first_name', 'last_name']
     
-    bio = forms.CharField(widget=forms.Textarea, required=False)
-    profile_image = forms.ImageField(required=False)
-    location = forms.CharField(max_length=100, required=False)
-    birth_date = forms.DateField(required=False)
+    bio = forms.CharField(widget=forms.Textarea, required=False, label="Bio")
+    profile_image = forms.ImageField(required=False, label="Profile Image")
+    location = forms.CharField(max_length=100, required=False, label="Location")
+    birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="Birth Date")
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
+        self.userprofile = kwargs.pop('userprofile', None)
         super().__init__(*args, **kwargs)
 
         if self.userprofile:

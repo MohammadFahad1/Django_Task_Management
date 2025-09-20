@@ -31,6 +31,12 @@ class EditProfileView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['userprofile'] = UserProfile.objects.get(user=self.request.user)
+        return kwargs
+
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_profile = UserProfile.objects.get(user=self.request.user)
@@ -112,6 +118,10 @@ class ProfileView(TemplateView):
         context['groups'] = user.groups.all()
         context['member_since'] = user.date_joined
         context['last_login'] = user.last_login
+        context['bio'] = user.userprofile.bio
+        context['profile_image'] = user.userprofile.profile_images
+        context['location'] = user.userprofile.location
+        context['birth_date'] = user.userprofile.birth_date
         return context
 
 class ChangePassword(PasswordChangeView):

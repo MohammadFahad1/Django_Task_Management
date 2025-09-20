@@ -4,7 +4,6 @@
 
 {% block content %}  
 <div class="bg-gray-100 min-h-screen flex">
-
   <!-- Sidebar -->
   <aside class="w-64 bg-white shadow-lg p-6">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Settings</h2>
@@ -24,18 +23,34 @@
   <main class="flex-1 p-10">
     <section id="profile" class="mb-12">
       <h1 class="text-3xl font-bold text-gray-800 mb-4">My Profile</h1>
+              {% if messages %}
+            {% for message in messages %}
+                <p style="{% if message.tags == 'error' %}background: pink; color: red; {% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green; {% endif %} padding: 8px">{{message}}</p>
+            {% endfor %}
+        {% endif %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                {{error}}
+            {% endfor %}
+        {% endif %}
       <div class="flex justify-between items-center mb-6 gap-5 bg-slate-200 p-6 rounded-xl shadow">
         <div class="bg-white p-6 rounded-xl shadow w-full">
+            <img src="{{ profile_image.url }}" alt="Profile Image" class="w-32 h-32 object-cover rounded-full mb-4">
             <p><span class="font-semibold">Name:</span> {{ name }}</p>
             <p><span class="font-semibold">Username:</span> {{ username }}</p>
-            <p><span class="font-semibold">Email:</span> {{ email}}</p>
-            <p><span class="font-semibold">Location:</span> 3-5 K.P Ghosh Street, Armanitola, Dhaka-1100</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow w-full">
+            <p><span class="font-semibold">Email:</span> {{ email}}</p>
             <p><span class="font-semibold">User role:</span> <mark>{{ groups.first.name }}</mark></p>
             <p><span class="font-semibold">Member since:</span> {{ member_since|humanized_date }}</p>
             <p><span class="font-semibold">Last login:</span> {{ last_login|humanized_date }}</p>
         </div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">Bio</h2>
+        <p>{{ bio }}</p>
+        <p class="mt-4"><span class="font-semibold">Location:</span> {{ location }}</p>
+        <p><span class="font-semibold">Birth Date:</span> {{ birth_date|date:"d/m/Y" }}</p>
       </div>
     </section>
   </main>
