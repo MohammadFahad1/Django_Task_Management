@@ -15,12 +15,30 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordRes
 from django.views.generic import TemplateView, UpdateView
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
-from users.models import UserProfile
+from users.models import CustomUser
 
 # Test for users
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
 
+
+class EditProfileView(UpdateView):
+    model = CustomUser
+    form_class = EditProfileForm
+    template_name = 'accounts/update_profile.html'
+    context_object_name = 'form'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def form_valid(self, form):
+        form.save()
+        return redirect('profile')
+    
+
+
+"""
 class EditProfileView(UpdateView):
     model = User
     form_class = EditProfileForm
@@ -47,6 +65,7 @@ class EditProfileView(UpdateView):
         form.save(commit=True)
         messages.success(self.request, "Your profile has been updated successfully.")
         return redirect('profile')
+"""
 
 
 
