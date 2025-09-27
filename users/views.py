@@ -140,10 +140,10 @@ class ProfileView(TemplateView):
         context['groups'] = user.groups.all()
         context['member_since'] = user.date_joined
         context['last_login'] = user.last_login
-        context['bio'] = user.userprofile.bio
-        context['profile_image'] = user.userprofile.profile_images
-        context['location'] = user.userprofile.location
-        context['birth_date'] = user.userprofile.birth_date
+        context['bio'] = user.bio
+        context['profile_image'] = user.profile_image
+        context['location'] = user.location
+        context['birth_date'] = user.birth_date
         return context
 
 class ChangePassword(PasswordChangeView):

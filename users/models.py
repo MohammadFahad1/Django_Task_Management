@@ -16,7 +16,7 @@ class UserProfile(models.Model):
 """
     
 class CustomUser(AbstractUser):
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, default='profile_images/default-profile-img.png')
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     birth_date = models.DateField(null=True, blank=True)
