@@ -2,7 +2,7 @@ from ast import Assign
 from email import message
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -16,6 +16,9 @@ from django.views.generic import TemplateView, UpdateView
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from users.models import CustomUser
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Test for users
 def is_admin(user):

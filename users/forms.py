@@ -1,9 +1,13 @@
+from operator import ge
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
-from django.contrib.auth.models import User, Permission, Group
+from django.contrib.auth.models import Permission, Group
 from django import forms
 import re
 from tasks.forms import StyledFormMixin
 from users.models import CustomUser
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class RegisterForm(UserCreationForm):
     class Meta:

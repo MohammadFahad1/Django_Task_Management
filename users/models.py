@@ -1,6 +1,6 @@
 import re
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 """
