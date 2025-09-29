@@ -198,18 +198,26 @@ def activate_user(request, user_id, token):
         return redirect('sign-in')
 
 
-@user_passes_test(is_admin, login_url='no-permission')
-def admin_dashboard(request):
-    users = User.objects.prefetch_related(
-        Prefetch('groups', queryset=Group.objects.all(), to_attr='all_groups')
-    ).all()
+# Admin Dashboard using class based view
+@method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
+class AdminDashboardView(TemplateView):
+    template_name = 'admin/dashboard.html'
 
-    for user in users:
-        if user.all_groups:
-            user.group_name = user.all_groups[0].name
-        else:
-            user.group_name = "No Group Assigned"
-    return render(request, 'admin/dashboard.html', {"users": users})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = User.objects.prefetch_related(
+            Prefetch('groups', queryset=Group.objects.all(), to_attr='all_groups')
+        ).all()
+
+        for user in users:
+            if user.all_groups:
+                user.group_name = user.all_groups[0].name
+            else:
+                user.group_name = "No Group Assigned"
+        
+        context['users'] = users
+        return context
+
 
 @user_passes_test(is_admin, login_url='no-permission')
 def assign_role(request, user_id):
