@@ -38,39 +38,6 @@ class EditProfileView(UpdateView):
     def form_valid(self, form):
         form.save()
         return redirect('profile')
-    
-
-
-"""
-class EditProfileView(UpdateView):
-    model = User
-    form_class = EditProfileForm
-    template_name = 'accounts/update_profile.html'
-    context_object_name = 'form'
-    success_url = reverse_lazy('profile')
-
-    def get_object(self, queryset=None):
-        return self.request.user
-    
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['userprofile'] = UserProfile.objects.get(user=self.request.user)
-        return kwargs
-
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user_profile = UserProfile.objects.get(user=self.request.user)
-        context['form'] = self.form_class(instance=self.object, userprofile=user_profile)
-        return context
-    
-    def form_valid(self, form):
-        form.save(commit=True)
-        messages.success(self.request, "Your profile has been updated successfully.")
-        return redirect('profile')
-"""
-
-
 
 # Create your views here.
 def sign_up(request):
@@ -84,14 +51,6 @@ def sign_up(request):
             user.save()
             messages.success(request, "A confirmation email has been sent to your email address. Please click on the link to activate your account.")
             return redirect('sign-in')
-        #     username = form.cleaned_data.get('username')
-        #     password = form.cleaned_data.get('password1')
-        #     confirm_password = form.cleaned_data.get('password2')
-
-        #     if password == confirm_password:
-        #         User.objects.create(username=username, password=password)
-        #     else:
-        #         print("Password didn't matched.")
         else:
             print("form is not valid")
     
@@ -107,18 +66,6 @@ def sign_in(request):
             return redirect('home')
 
     return render(request, 'registration/login.html', {"form": form})
-        # username = request.POST.get('username')
-        # password = request.POST.get('password')
-
-        # user = authenticate(request, username=username, password=password)
-
-        # if user is not None:
-        #     login(request, user)
-        #     return redirect('home')
-        # else:
-        #     messages.error(request, "Invalid username or password")
-        
-    # return render(request, 'registration/login.html')
 
 class CustomLoginView(LoginView):
     form_class = LoginForm
@@ -197,8 +144,6 @@ def activate_user(request, user_id, token):
         messages.error(request, "Invalid activation link")
         return redirect('sign-in')
 
-
-# Admin Dashboard using class based view
 @method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
 class AdminDashboardView(TemplateView):
     template_name = 'admin/dashboard.html'
@@ -217,7 +162,7 @@ class AdminDashboardView(TemplateView):
         
         context['users'] = users
         return context
-
+    
 
 @user_passes_test(is_admin, login_url='no-permission')
 def assign_role(request, user_id):
@@ -252,19 +197,3 @@ def create_group(request):
 def group_list(request):
     groups = Group.objects.prefetch_related('permissions').all()
     return render(request, 'admin/group_list.html', {"groups": groups})
-
-""" 
-    Admin
-        - Sobkisui
-    Manager
-        - Project
-        - Task Create
-    Employee
-        - Task read
-        - Task update
-    
-        Role Based Access Control (RBAC)
-
-        https://medium.com/@fahimad/role-based-access-control-rbac-in-django-1955b31d93a5
-        https://docs.djangoproject.com/en/5.1/topics/auth/
-"""

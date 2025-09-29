@@ -37,14 +37,8 @@ def is_employee(user):
     return user.groups.filter(name='Employee').exists()
 
 # Create your views here.
-
 user_passes_test(is_manager, login_url='no-permission')
 def manager_dashboard(request):
-    # Getting Task Count
-    # total_task = tasks.count()
-    # completed_task = Tasks.objects.filter(status="COMPLETED").count()
-    # in_progress_task = Tasks.objects.filter(status="IN_PROGRESS").count()
-    # pending_task = Tasks.objects.filter(status="PENDING").count()
     
     type = request.GET.get('type', 'all')
 
@@ -74,45 +68,14 @@ def manager_dashboard(request):
         }
     return render(request, "dashboard/manager-dashboard.html", context)
 
-@user_passes_test(is_employee, login_url='no-permission')
-def user_dashboard(request):
-    return render(request, "dashboard/user-dashboard.html")
+# Class Based View for User_Dashboard
+@method_decorator(user_passes_test(is_employee, login_url='no-permission'), name='dispatch')
+class UserDashboard(View):
+    def get(self, request):
+        return render(request, "dashboard/user-dashboard.html")
 
-def test(request):
-    context = {
-        "names": ["Mahmud", "Ahmed", "John", "Shajib", "Rajib"],
-        "Fahad": {"name": "Md. Fahad Monshi", "eye": "blue"}
-    }
-    return render(request, "test.html", context)
 
-@login_required
-@permission_required('tasks.add_tasks', login_url='no-permission')
-def create_task(request):
-    task_form = TaskModelForm() # For GET Request
-    task_detail_form = TaskDetailModelForm()
-
-    if request.method == "POST": # For POST Request
-        task_form = TaskModelForm(request.POST)
-        task_detail_form = TaskDetailModelForm(request.POST, request.FILES)
-        if task_form.is_valid() and task_detail_form.is_valid():
-            """ For Model Form Data """
-            task = task_form.save()
-            task_detail = task_detail_form.save(commit=False)
-            task_detail.task = task
-            task_detail.save()
-
-            messages.success(request, "Task Created Successfully!")
-            return redirect('create-task')
-
-    context = {"task_form": task_form, "task_detail_form": task_detail_form}
-    return render(request, "task_form.html", context)
-
-# Decorators for views
-# @method_decorator(login_required, name='dispatch')
-# @method_decorator(permission_required('tasks.add_tasks', login_url='no-permission'), name='dispatch')
-# decorators = [login_required, permission_required('tasks.add_tasks', login_url='no-permission')]
-# @method_decorator(decorators, name='dispatch')
-
+""" Class Based View for creating task"""
 class CreateTask(LoginRequiredMixin, PermissionRequiredMixin, ContextMixin, View):
     permission_required = 'tasks.add_tasks'
     login_url = 'sign-in'
@@ -154,8 +117,7 @@ def view_task(request):
     tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})
 
-# view_project_decorators = [login_required, permission_required('tasks.view_tasks', login_url='no-permission')]
-# @method_decorator(view_project_decorators, name='dispatch')
+
 class ViewProject(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'projects.view_project'
     login_url = 'sign-in'
@@ -211,23 +173,7 @@ def delete_task(request, id):
         messages.error(request, "Something went wrong")
         return redirect('manager-dashboard')
 
-@login_required
-@permission_required('tasks.view_tasks', login_url='no-permission')
-def task_details(request, task_id):
-    task = Tasks.objects.get(id=task_id)
-    status_choices = Tasks.STATUS_CHOICES
-
-    if request.method == 'POST':
-        selected_status = request.POST.get('task_status')
-        task.status = selected_status
-        if selected_status in [status[0] for status in status_choices]:
-            task.status = selected_status
-            task.save()
-            return redirect('task-details', task_id=task_id)
-        # task.save()
-
-    return render(request, 'task_details.html', {'task': task, 'status_choices': status_choices})
-
+""" Class Based Detail View for Task """
 decorators =[login_required, permission_required('tasks.view_tasks', login_url='no-permission')]
 @method_decorator(decorators, name='dispatch')
 class TaskDetail(DetailView):
@@ -280,14 +226,6 @@ class UpdateTask(UpdateView):
             messages.success(request, "Task Updated Successfully")
 
         return redirect('update-task', id=task.id)
-
-
-
-@login_required
-def dashboard(request):
-    if is_manager(request.user):
-        return context
-
     
 
 @login_required
