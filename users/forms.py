@@ -80,6 +80,18 @@ class AssignRoleForm(StyledFormMixin, forms.Form):
         empty_label="Select a role"
     )
 
+class AssignGroupForm(StyledFormMixin, forms.ModelForm):
+    groups = forms.ChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Assign Groups"
+    )
+
+    class Meta:
+        model = User
+        fields = ['groups']
+
 class CreateGroupForm(StyledFormMixin, forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
