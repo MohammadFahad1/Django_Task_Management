@@ -2,6 +2,16 @@
 
 {% block content %}
 <div class="max-w-[1450px] mx-auto px-8">
+  {% if message in messages %}
+    {% for message in messages %}
+      <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green;{% endif %} padding: 8px">{{message}}</p>
+    {% endfor %}
+  {% endif %}
+  
+  {% if message %}
+    <p style="{% if message.tags == 'error' %}background: pink; color: red;{% endif %} {% if message.tags == 'success' %}background: lightgreen; color: green;{% endif %} padding: 8px">{{message}}</p>
+  {% endif %}
+    
   {% comment %} <!-- Starts Grid --> {% endcomment %}
   <section class="grid grid-cols-4 gap-6 my-8">
     {% comment %} <!-- Total Tasks --> {% endcomment %}

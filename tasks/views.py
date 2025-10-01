@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.base import ContextMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView
 from django.views.generic.edit import UpdateView
 
 
@@ -35,38 +35,6 @@ def is_manager(user):
 
 def is_employee(user):
     return user.groups.filter(name='Employee').exists()
-
-# Create your views here.
-""" user_passes_test(is_manager, login_url='no-permission')
-def manager_dashboard(request):
-    
-    type = request.GET.get('type', 'all')
-
-    counts = Tasks.objects.aggregate(
-        total=Count('id'),
-        completed=Count('id', filter=Q(status="COMPLETED")),
-        in_progress=Count('id', filter=Q(status="IN_PROGRESS")),
-        pending=Count('id', filter=Q(status="PENDING")),
-        )
-    
-    # Retriving task data
-    base_query = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to')
-
-    if type == 'completed':
-        tasks = base_query.filter(status='COMPLETED')
-    elif type == 'in-progress':
-        tasks = base_query.filter(status='IN_PROGRESS')
-    elif type == 'pending':
-        tasks = base_query.filter(status='PENDING')
-    elif type == 'all':
-        tasks = base_query.all()
-
-    context = {
-        "tasks": tasks,
-        "counts": counts,
-        "role": 'manager'    
-        }
-    return render(request, "dashboard/manager-dashboard.html", context) """
 
 # Class Based View for Manager_Dashboard
 @method_decorator(user_passes_test(is_manager, login_url='no-permission'), name='dispatch')
@@ -193,18 +161,14 @@ def update_task(request, id):
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, 'task_form.html', context)
 
-# Delete Task view
-@login_required
-@permission_required('tasks.delete_tasks', login_url='no-permission')
-def delete_task(request, id):
-    if request.method == 'POST':
-        task = Tasks.objects.get(id=id)
-        task.delete()
-        messages.success(request, "Task Deleted Successfully")
-        return redirect('manager-dashboard')
-    else:
-        messages.error(request, "Something went wrong")
-        return redirect('manager-dashboard')
+# Class based Delete Task View
+@method_decorator([login_required, permission_required('tasks.delete_tasks', login_url='no-permission')], name='dispatch')
+class DeleteTask(DeleteView):
+    model = Tasks
+    template_name = "dashboard/manager-dashboard.html"
+    success_url = "/tasks/manager-dashboard/"
+    context_object_name = "task"
+    pk_url_kwarg = "id"
 
 """ Class Based Detail View for Task """
 decorators =[login_required, permission_required('tasks.view_tasks', login_url='no-permission')]
