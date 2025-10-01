@@ -118,6 +118,12 @@ def view_task(request):
     tasks = Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
     return render(request, "show_task.html", {"tasks": tasks})
 
+# Class Based View for viewing Projects with number of tasks
+@method_decorator([login_required, permission_required('projects.view_project', login_url='no-permission')], name='dispatch')
+class ViewTask(View):
+    def get(self, request):
+        return Project.objects.annotate(num_task=Count('tasks')).order_by('num_task')
+
 
 class ViewProject(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'projects.view_project'
