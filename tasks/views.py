@@ -37,7 +37,7 @@ def is_employee(user):
     return user.groups.filter(name='Employee').exists()
 
 # Create your views here.
-user_passes_test(is_manager, login_url='no-permission')
+""" user_passes_test(is_manager, login_url='no-permission')
 def manager_dashboard(request):
     
     type = request.GET.get('type', 'all')
@@ -66,7 +66,40 @@ def manager_dashboard(request):
         "counts": counts,
         "role": 'manager'    
         }
-    return render(request, "dashboard/manager-dashboard.html", context)
+    return render(request, "dashboard/manager-dashboard.html", context) """
+
+# Class Based View for Manager_Dashboard
+@method_decorator(user_passes_test(is_manager, login_url='no-permission'), name='dispatch')
+class ManagerDashboard(View):
+    def get(self, request):
+        type = request.GET.get('type', 'all')
+
+        counts = Tasks.objects.aggregate(
+            total=Count('id'),
+            completed=Count('id', filter=Q(status="COMPLETED")),
+            in_progress=Count('id', filter=Q(status="IN_PROGRESS")),
+            pending=Count('id', filter=Q(status="PENDING")),
+            )
+        
+        # Retriving task data
+        base_query = Tasks.objects.select_related('task_detail').prefetch_related('assigned_to')
+
+        if type == 'completed':
+            tasks = base_query.filter(status='COMPLETED')
+        elif type == 'in-progress':
+            tasks = base_query.filter(status='IN_PROGRESS')
+        elif type == 'pending':
+            tasks = base_query.filter(status='PENDING')
+        elif type == 'all':
+            tasks = base_query.all()
+
+        context = {
+            "tasks": tasks,
+            "counts": counts,
+            "role": 'manager'    
+            }
+        return render(request, "dashboard/manager-dashboard.html", context)
+
 
 # Class Based View for User_Dashboard
 @method_decorator(user_passes_test(is_employee, login_url='no-permission'), name='dispatch')
