@@ -1,6 +1,6 @@
 from django import template
 from django.urls import path
-from users.views import AssignRoleView, CustomLoginView, CustomPasswordResetView, EditProfileView, AdminDashboardView, create_group, group_list, sign_in, sign_out, sign_up, activate_user, AssignRoleView, ProfileView, ChangePassword, CustomPasswordResetConfirmView
+from users.views import AssignRoleView, CustomLoginView, CustomPasswordResetView, EditProfileView, AdminDashboardView, create_group, group_list, sign_in, sign_out, sign_up, activate_user, ProfileView, ChangePassword, CustomPasswordResetConfirmView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeDoneView
 # from django.views.generic import TemplateView
 

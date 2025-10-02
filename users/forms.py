@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import ge
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import Permission, Group
@@ -74,23 +75,52 @@ class LoginForm(StyledFormMixin,AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-class AssignRoleForm(StyledFormMixin, forms.Form):
+# class AssignRoleForm(StyledFormMixin, forms.Form):
+#     role = forms.ModelChoiceField(
+#         queryset=Group.objects.all(),
+#         empty_label="Select a role"
+#     )
+
+# tasks/forms.py
+
+from django import forms
+from django.contrib.auth.models import Group
+# Assuming User is the custom or default user model
+from django.contrib.auth import get_user_model 
+
+User = get_user_model() 
+
+class AssignRoleForm(StyledFormMixin, forms.ModelForm):
     role = forms.ModelChoiceField(
         queryset=Group.objects.all(),
-        empty_label="Select a role"
-    )
-
-class AssignGroupForm(StyledFormMixin, forms.ModelForm):
-    groups = forms.ChoiceField(
-        queryset=Group.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-        label="Assign Groups"
+        empty_label="Select a role",
+        required=True
     )
 
     class Meta:
         model = User
-        fields = ['groups']
+        fields = []
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            current_group = self.instance.groups.first()
+            if current_group:
+                self.fields['role'].initial = current_group
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        selected_group = self.cleaned_data.get('role')
+
+        if selected_group:
+            user.groups.clear()
+            user.groups.add(selected_group)
+
+        if commit:
+            user.save()
+        
+        return user
 
 class CreateGroupForm(StyledFormMixin, forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(

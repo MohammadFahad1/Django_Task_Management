@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from users.forms import CustomRegistrationForm, LoginForm, RegisterForm, AssignRoleForm, CreateGroupForm, CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm, EditProfileForm, AssignGroupForm
+from users.forms import CustomRegistrationForm, LoginForm, RegisterForm, AssignRoleForm, CreateGroupForm, CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm, EditProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -162,48 +162,16 @@ class AdminDashboardView(TemplateView):
         
         context['users'] = users
         return context
-    
-
-""" @user_passes_test(is_admin, login_url='no-permission')
-def assign_role(request, user_id):
-    user = User.objects.get(id=user_id)
-    form = AssignRoleForm()
-
-    if request.method == 'POST':
-        form = AssignRoleForm(request.POST)
-        if form.is_valid():
-            role = form.cleaned_data.get('role')
-            user.groups.clear() # Clear existing roles
-            user.groups.add(role)
-            messages.success(request, f"User {user.username} role has been changed to {role.name} role.")
-            return redirect('admin-dashboard')
-        
-    return render(request, 'admin/assign_role.html', {"form": form}) """
 
 # Assign role view with pre-selected current role and using class based view
 @method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
 class AssignRoleView(UpdateView):
     model = User
-    form_class = AssignGroupForm
+    form_class = AssignRoleForm
     template_name = 'admin/assign_role.html'
     context_object_name = 'form'
+    pk_url_kwarg = 'user_id'
     success_url = reverse_lazy('admin-dashboard')
-
-    def __init__(self, *args, **kwargs):
-        self.instance = kwargs.pop('instance', None) if self.instance else None
-        super().__init__(*args, **kwargs)
-
-    def form_valid(self, form):
-        user = self.object
-        role = form.cleaned_data.get('role')
-        user.groups.clear()
-        user.groups.add(role)
-        messages.success(self.request, f"User {user.username} role has been changed to {role.name} role.")
-        return super().form_valid(form)
-    
-    def get_object(self, queryset=None):
-        user_id = self.kwargs.get('user_id')
-        return User.objects.get(id=user_id)
 
 @user_passes_test(is_admin, login_url='no-permission')
 def create_group(request):
