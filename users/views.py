@@ -186,6 +186,25 @@ def create_group(request):
     
     return render(request, 'admin/create_group.html', {"form": form})
 
+# Class based create group view
+@method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
+class CreateGroupView(TemplateView):
+    template_name = 'admin/create_group.html'
+    form_class = CreateGroupForm
+    success_url = reverse_lazy('create-group')
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f"Group {group.name} has been created successfully.")
+            return redirect(self.success_url)
+        return render(request, self.template_name, {'form': form})
+
 # Class based group list view
 @method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
 class GroupListView(TemplateView):
