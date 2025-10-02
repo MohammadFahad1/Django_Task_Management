@@ -186,7 +186,13 @@ def create_group(request):
     
     return render(request, 'admin/create_group.html', {"form": form})
 
-@user_passes_test(is_admin, login_url='no-permission')
-def group_list(request):
-    groups = Group.objects.prefetch_related('permissions').all()
-    return render(request, 'admin/group_list.html', {"groups": groups})
+# Class based group list view
+@method_decorator(user_passes_test(is_admin, login_url='no-permission'), name='dispatch')
+class GroupListView(TemplateView):
+    template_name = 'admin/group_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        groups = Group.objects.prefetch_related('permissions').all()
+        context['groups'] = groups
+        return context
