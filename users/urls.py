@@ -11,7 +11,6 @@ urlpatterns = [
     path('activate/<int:user_id>/<str:token>/', activate_user, name="activate-user"),
     path('admin/dashboard', AdminDashboardView.as_view(), name="admin-dashboard"),
     path('admin/<int:user_id>/assign-role/', AssignRoleView.as_view(), name="assign-role"),
-    # path('admin/create-group/', create_group, name='create-group'),
     path('admin/create-group/', CreateGroupView.as_view(), name='create-group'),
     path('admin/group-list/', GroupListView.as_view(), name='group-list'),
     path('profile/', ProfileView.as_view(), name='profile'),
